@@ -1,31 +1,48 @@
+const main = (document => {
+function createElement(tag, props, ...children){
+  const element = document.createElement(tag);
+  //for (let prop in props){
+  //  element[prop] = props[prop];
+  //}
+  Object.keys(props).forEach(key => element[key] = props[key]);
+  if (children.lenght > 0){
+    children.forEach(child =>{
+      if (typeof child === 'string'){
+        child = document.createTextNode(child);
+    }
+      element.appendChild(child);
+    });
+  }
+  return element;
+}
 function createTodoItem(title) {
-  const checkbox = document.createElement('input');
-  checkbox.type = 'checkbox';
-  checkbox.className = 'checkbox';
+  const checkbox = createElement('input',{type:'checkbox', className: 'checkbox'});
+//  checkbox.type = 'checkbox';
+//  checkbox.className = 'checkbox';
 
-  const label = document.createElement('label');
-  label.innerText = title;
-  label.className = 'title';
+  const label = createElement('label',{className:'title'},title);
+//  label.innerText = 'title';
+//  label.className = 'title';
 
-  const editInput = document.createElement('input');
-  editInput.type = 'text';
-  editInput.className = 'textfield';
+  const editInput = createElement('input',{ type: 'text', className: 'textfield'});
+//  editInput.type = 'text';
+//  editInput.className = 'textfield';
 
-  const  editButton = document.createElement('button');
-  editButton.innerText = 'Edit';
-  editButton.className = 'edit';
-  const deleteButton = document.createElement('button');
-  deleteButton.innerText = 'Delete';
-  deleteButton.className = 'delete';
+  const  editButton = createElement('button',{className:'edit'}, 'Edit');
+//  editButton.innerText = 'Edit';
+//  editButton.className = 'edit';
+  const deleteButton = createElement('button',{className:'delete'}, 'Delete');
+//  deleteButton.innerText = 'Delete';
+//  deleteButton.className = 'delete';
 
-  const li = document.createElement('li');
-  listItem.className = 'todo-item';
+  const listItem = createElement('li',{className: 'todo-item'}, checkbox, label, editInput, editButton, deleteButton );
 
-  listItem.appendChild(checkbox);
-  listItem.appendChild(lable);
-  listItem.appendChild(editInput);
-  listItem.appendChild(editButton);
-  listItem.appendChild(deleteButton);
+//  listItem.className = 'todo-item';
+//  listItem.appendChild(checkbox);
+//  listItem.appendChild(lable);
+//  listItem.appendChild(editInput);
+//  listItem.appendChild(editButton);
+//  listItem.appendChild(deleteButton);
   bindEvents(listItem);
 
   return listItem;
@@ -44,8 +61,7 @@ function createTodoItem(title) {
 function addTodoItem(event) {
   event.preventDefault();
 
-  if(addInput.value === '')
-  return alert('You need to write task!');
+  if(addInput.value === '') return alert('You need to write task!');
 
   const todoItem = createTodoItem(addInput.value);
   todoList.appendChild(todoItem)
@@ -67,19 +83,39 @@ function editTodoItem() {
     title.innerText = editInput.value;
     this.innerText = 'Edit';
 
-  }else {
+  } else {
     editInput.value = title.innerText;
-    this.innerText = 'Save'
+    this.innerText = 'Save';
   }
   listItem.classList.toggle('editing');
 }
 function deleteTodoItem() {
+  const listItem = this.parentNode;
+  todoList.removeChild(listItem);
 
 }
+//function load(){
+//  const string = JSON.parse(localStorage.getItem('todos'));
+//  return data;
+//}
+//function save(){
+//  const string = JSON.stringifly(data);
+//  localStirage.setItem('todos', string);
+//
+//}
 
-const todoForm = document.createElement('todo-form');
-const addInput = document.createElement('add-input');
+const todoForm = document.getElementById('todo-form');
+const addInput = document.getElementById('add-input');
 const todoList = document.getElementById('todo-list');
 const todoItems = document.querySelectorAll('.todo-item');
+//const data = [{id:1, title: '', completed: false},{},{}]
 
-todoForm.addEventListener('submit', addTodoItem);
+function main(){
+  todoForm.addEventListener('submit', addTodoItem);
+  todoItems.forEach(item => bindEvents(item));
+}
+main();
+
+return main;
+})(document);
+main();
